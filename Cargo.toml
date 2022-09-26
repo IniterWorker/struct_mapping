@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "struct_mapping",
+    "struct_mapping_derive",
+    "struct_mapping_test"
+]

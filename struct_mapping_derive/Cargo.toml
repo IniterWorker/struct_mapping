@@ -1,0 +1,21 @@
+[package]
+name = "struct_mapping_derive"
+version = "1.0.0"
+edition = "2021"
+authors = ["Walter Bonetti <walter.bonetti@epitech.eu>"]
+license = "MIT OR Apache-2.0"
+description = "Token StructMapping for testing StructMapping implementations"
+keywords = ["struct_mapping", "accessors", "mutators", "derive"]
+include = ["src/**/*.rs", "crates-io.md", "README.md", "LICENSE-APACHE", "LICENSE-MIT"]
+
+[lib]
+proc-macro = true
+
+[dev-dependencies]
+struct_mapping = { version = "1.0", path = "../struct_mapping" }
+
+[dependencies]
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = { version = "1.0", features = ["parsing"] }
+darling = "0.14.1"
