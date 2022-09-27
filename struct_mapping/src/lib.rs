@@ -1,3 +1,8 @@
+//! # StructMapping
+//!
+//! StructMapping is a library for create string-based accessors/mutators Rust data structure..
+//!
+
 #[derive(Debug)]
 pub enum Error {
     InvalidInput,
@@ -12,3 +17,8 @@ where
 }
 
 mod impls;
+
+// Re-export #[derive(StructMapping)].
+#[cfg(feature = "struct_mapping_derive")]
+#[doc(hidden)]
+pub use struct_mapping_derive::*;

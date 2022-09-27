@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use struct_mapping::ToStructMappingField;
-    use struct_mapping_derive::StructMapping;
+    use struct_mapping::{StructMapping, ToStructMappingField};
 
     #[test]
     fn basic_field_get() {
