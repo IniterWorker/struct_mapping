@@ -34,21 +34,25 @@ use struct_mapping::StructMapping;
 
 #[derive(StructMapping, Default)]
 struct TestStruct {
-    field_number: u32,
+    #[struct_mapping(rename = "jimmy", alias = "jian_yang")]
+    jian: u32,
     #[struct_mapping(skip)]
     deep: DeepTestStruct,
 }
 
 fn main() {
-    let ex = TestStruct::default();
+    let mut ex = TestStrut::default();
 
     // print "0"
-    println!("{:?}", ex.field_get("field_number"));
+    println!("{:?}", ex.sm_get("jimmy"));
 
-    ex.field_set("field_number", "128".to_string()).unwrap();
+    ex.sm_set("jimmy", "128".to_string()).unwrap();
     
     // print "128"
-    println!("{:?}", ex.field_get("field_number"));
+    println!("{:?}", ex.sm_get("jimmy"));
+
+    // print ["jimmy", "jian_yang"]
+    println!("{:?}", TestStruct::sm_list());
 }
 ```
 
