@@ -1,20 +1,21 @@
-use crate::{Error, ToStructMappingField};
+use crate::{MutatorError, ToStructMappingField};
 
 macro_rules! primitive_impl {
     ($ty:ident) => {
         impl ToStructMappingField for $ty {
             #[inline]
-            fn from_string(value: impl AsRef<str>) -> Result<Self, Error> {
+            fn sm_mutator(key: &str, value: &str) -> Result<Self, MutatorError> {
                 value
-                    .as_ref()
                     .parse::<$ty>()
-                    .map_err(|_| Error::InvalidInput)
+                    .map_err(|err| MutatorError::InvalidValue {
+                        key: key.to_string(),
+                        error: err.to_string(),
+                    })
             }
         }
     };
 }
 
-// TODO: Float
 primitive_impl!(isize);
 primitive_impl!(i8);
 primitive_impl!(i16);
@@ -25,25 +26,29 @@ primitive_impl!(u8);
 primitive_impl!(u16);
 primitive_impl!(u32);
 primitive_impl!(u64);
+primitive_impl!(f32);
+primitive_impl!(f64);
 
 impl ToStructMappingField for bool {
     #[inline]
-    fn from_string(value: impl AsRef<str>) -> Result<Self, Error> {
-        if let Ok(number) = value.as_ref().parse::<i32>() {
-            Ok(number > 0)
-        } else {
-            Ok(value.as_ref() == "true" || value.as_ref() == "True")
-        }
+    fn sm_mutator(key: &str, value: &str) -> Result<Self, MutatorError> {
+        value
+            .parse::<bool>()
+            .map_err(|err| MutatorError::InvalidValue {
+                key: key.to_string(),
+                error: err.to_string(),
+            })
     }
 }
 
 impl ToStructMappingField for char {
     #[inline]
-    fn from_string(value: impl AsRef<str>) -> Result<Self, Error> {
-        match value.as_ref().len() {
-            0 => Err(Error::InvalidInput),
-            1 => Ok(value.as_ref().as_bytes()[0] as char),
-            _ => Err(Error::InvalidInput),
-        }
+    fn sm_mutator(key: &str, value: &str) -> Result<Self, MutatorError> {
+        value
+            .parse::<char>()
+            .map_err(|err| MutatorError::InvalidValue {
+                key: key.to_string(),
+                error: err.to_string(),
+            })
     }
 }

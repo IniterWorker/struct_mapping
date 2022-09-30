@@ -1,3 +1,34 @@
+//! ```rust
+//! use struct_mapping::{StructMapping, ToStructMappingField};
+//!
+//! fn main() {
+//!     #[derive(Default)]
+//!     struct DeepTestStruct {}
+//!
+//!     #[derive(StructMapping, Default)]
+//!     struct TestStruct {
+//!         #[struct_mapping(rename = "jimmy", alias = "jian_yang")]
+//!         jian: u32,
+//!         #[struct_mapping(skip)]
+//!         #[allow(dead_code)]
+//!         deep: DeepTestStruct,
+//!     }
+//!
+//!     let mut ex = TestStruct::default();
+//!
+//!     // print "0"
+//!     println!("{}", ex.sm_get("jimmy").unwrap());
+//!
+//!     ex.sm_set("jimmy", "128").unwrap();
+//!
+//!     // print "128"
+//!     println!("{}", ex.sm_get("jimmy").unwrap());
+//!
+//!     // print ["jimmy", "jian_yang"]
+//!     println!("{:?}", TestStruct::sm_list());
+//! }
+//! ```
+
 #[cfg(test)]
 mod tests {
     use struct_mapping::{StructMapping, ToStructMappingField};
@@ -17,7 +48,7 @@ mod tests {
         }
 
         let ex = TestStruct::default();
-        assert!(matches!(ex.sm_get("key_a"), Ok(a) if a == "0"));
+        assert!(matches!(ex.sm_get("key_a"), Some(a) if a == "0"));
     }
 
     #[test]
@@ -29,8 +60,34 @@ mod tests {
         }
 
         let mut ex = TestStruct::default();
-        ex.sm_set("key_a", "128".to_string()).unwrap();
-        assert!(matches!(ex.sm_get("key_a"), Ok(a) if a == "128"));
+        ex.sm_set("key_a", "128").unwrap();
+        assert!(matches!(ex.sm_get("key_a"), Some(a) if a == "128"));
+    }
+
+    #[test]
+    fn basic_sm_set_f32() {
+        #[derive(StructMapping, Default)]
+        pub struct TestStruct {
+            pub key_a: f32,
+        }
+
+        let mut ex = TestStruct::default();
+        ex.sm_set("key_a", "128.5").unwrap();
+        assert!(matches!(ex.sm_get("key_a"), Some(a) if a == "128.5"));
+        assert_eq!(ex.key_a, 128.5);
+    }
+
+    #[test]
+    fn basic_sm_set_f64() {
+        #[derive(StructMapping, Default)]
+        pub struct TestStruct {
+            pub key_a: f64,
+        }
+
+        let mut ex = TestStruct::default();
+        ex.sm_set("key_a", "128.5").unwrap();
+        assert!(matches!(ex.sm_get("key_a"), Some(a) if a == "128.5"));
+        assert_eq!(ex.key_a, 128.5);
     }
 
     #[test]
@@ -41,7 +98,7 @@ mod tests {
         }
 
         let ex = TestStruct { key_a: true };
-        assert!(matches!(ex.sm_get("key_a"), Ok(a) if a == "true"));
+        assert!(matches!(ex.sm_get("key_a"), Some(a) if a == "true"));
     }
 
     #[test]
@@ -52,7 +109,7 @@ mod tests {
         }
 
         let ex = TestStruct { key_a: 'a' as char };
-        assert!(matches!(ex.sm_get("key_a"), Ok(a) if a == "a"));
+        assert!(matches!(ex.sm_get("key_a"), Some(a) if a == "a"));
     }
 
     #[test]
@@ -70,7 +127,7 @@ mod tests {
         }
 
         let ex = TestStruct::default();
-        assert!(matches!(ex.sm_get("key_a"), Ok(a) if a == "0"));
+        assert!(matches!(ex.sm_get("key_a"), Some(a) if a == "0"));
     }
 
     #[test]
@@ -82,7 +139,7 @@ mod tests {
         }
 
         let ex = TestStruct::default();
-        assert!(matches!(ex.sm_get("key_renamed"), Ok(a) if a == "0"));
+        assert!(matches!(ex.sm_get("key_renamed"), Some(a) if a == "0"));
     }
 
     #[test]
@@ -94,7 +151,7 @@ mod tests {
         }
 
         let ex = TestStruct::default();
-        assert!(matches!(ex.sm_get("alias"), Ok(a) if a == "0"));
+        assert!(matches!(ex.sm_get("alias"), Some(a) if a == "0"));
     }
 
     #[test]
@@ -124,12 +181,12 @@ mod tests {
         let mut ex = TestStruct::default();
 
         // print "0"
-        assert!(matches!(ex.sm_get("jimmy"), Ok(value) if value == "0"));
+        assert!(matches!(ex.sm_get("jimmy"), Some(value) if value == "0"));
 
-        ex.sm_set("jimmy", "128".to_string()).unwrap();
+        ex.sm_set("jimmy", "128").unwrap();
 
         // print "128"
-        assert!(matches!(ex.sm_get("jimmy"), Ok(value) if value == "128"));
+        assert!(matches!(ex.sm_get("jimmy"), Some(value) if value == "128"));
 
         // print ["jimmy", "jian_yang"]
         assert_eq!(

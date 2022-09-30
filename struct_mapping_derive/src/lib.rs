@@ -1,3 +1,6 @@
+//! # StructMapping Derive
+//!
+//!
 use syn::{parse_macro_input, DeriveInput};
 
 use proc_macro::TokenStream;

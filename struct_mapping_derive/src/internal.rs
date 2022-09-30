@@ -50,7 +50,8 @@ fn parse_structural_context(
         syn::Data::Struct(s) => match &s.fields {
             syn::Fields::Named(FieldsNamed { named, .. }) => {
                 let idents = named.iter();
-                let idents = idents.fold(Vec::new(), |mut acc, elem| match &elem.ident {
+
+                idents.fold(Vec::new(), |mut acc, elem| match &elem.ident {
                     Some(idt) => {
                         let parsed: MyTrait = FromAttributes::from_attributes(&elem.attrs).unwrap();
                         let fieldname = idt.to_string();
@@ -68,15 +69,14 @@ fn parse_structural_context(
                                 parsed.alias,
                             ]
                             .into_iter()
-                            .filter_map(|i| i)
+                            .flatten()
                             .collect::<Vec<String>>(),
                         };
                         acc.push(field);
                         acc
                     }
                     None => acc,
-                });
-                idents
+                })
             }
             _ => unimplemented!("is not implemented"),
         },
@@ -101,7 +101,7 @@ pub fn expand_derive_struct_mapping(
 
             acc.push(quote! {
                 if vec![#(#names),*].contains(&key) {
-                    self.#ident = ToStructMappingField::from_string(value)?;
+                    self.#ident = ToStructMappingField::sm_mutator(key, value)?;
                     return Ok(())
                 }
             });
@@ -118,7 +118,7 @@ pub fn expand_derive_struct_mapping(
 
             acc.push(quote! {
                 if vec![#(#names),*].contains(&key) {
-                    return Ok(self.#ident.to_string())
+                    return Some(self.#ident.to_string())
                 }
             });
             acc
@@ -154,18 +154,18 @@ pub fn expand_derive_struct_mapping(
             }
 
             /// Accessor string-based to get value from the key
-            pub fn sm_get(&self, key: &'static str) -> Result<String, struct_mapping::Error> {
+            pub fn sm_get(&self, key: &str) -> Option<String> {
                 #getters_tokens
-                Err(struct_mapping::Error::InvalidKey(key))
+                None
             }
 
             /// Mutator string-based to set value from the key
-            pub fn sm_set(&mut self, key: &'static str, value: String) -> Result<(), struct_mapping::Error> {
+            pub fn sm_set(&mut self, key: &str, value: &str) -> Result<(), struct_mapping::MutatorError> {
                 #setters_tokens
-                Err(struct_mapping::Error::InvalidKey(key))
+                Err(struct_mapping::MutatorError::InvalidKey)
             }
         }
     };
 
-    Ok(output.into())
+    Ok(output)
 }
