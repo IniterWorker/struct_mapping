@@ -1,6 +1,6 @@
 [package]
 name = "struct_mapping_test"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["Walter Bonetti <walter.bonetti@epitech.eu>"]
 license = "MIT OR Apache-2.0"
