@@ -4,10 +4,11 @@ version = "1.0.1"
 edition = "2021"
 authors = ["Walter Bonetti <walter.bonetti@epitech.eu>"]
 license = "MIT OR Apache-2.0"
-description = "Token StructMapping for testing StructMapping implementations"
+description = "Generating string-based accessors/mutators Rust data structure"
 keywords = ["struct_mapping", "accessors", "mutators", "struct"]
 include = ["src/**/*.rs", "crates-io.md", "README.md", "LICENSE-APACHE", "LICENSE-MIT"]
 repository = "https://github.com/IniterWorker/struct_mapping"
+readme = "crates-io.md"
 
 [dependencies]
 struct_mapping_derive = { version = "1.0", optional = true, path = "../struct_mapping_derive" }

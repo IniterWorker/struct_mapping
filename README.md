@@ -1,6 +1,6 @@
 # StructMapping
 
-__StructMapping is a library for create string-based accessors/mutators Rust data structure.__
+__StructMapping is a library for generating string-based accessors/mutators Rust data structure.__
 
 
 ## Work In Progress

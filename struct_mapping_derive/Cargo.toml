@@ -8,6 +8,7 @@ description = "Token StructMapping for testing StructMapping implementations"
 keywords = ["struct_mapping", "accessors", "mutators", "derive"]
 include = ["src/**/*.rs", "crates-io.md", "README.md", "LICENSE-APACHE", "LICENSE-MIT"]
 repository = "https://github.com/IniterWorker/struct_mapping"
+readme = "crates-io.md"
 
 [lib]
 proc-macro = true

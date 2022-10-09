@@ -8,6 +8,7 @@ description = "Token StructMapping for testing StructMapping implementations"
 keywords = ["struct_mapping", "serialization", "testing", "dev-dependencies"]
 include = ["src/**/*.rs", "crates-io.md", "README.md", "LICENSE-APACHE", "LICENSE-MIT"]
 repository = "https://github.com/IniterWorker/struct_mapping"
+readme = "crates-io.md"
 
 [dependencies]
 struct_mapping = { version = "1.0", path = "../struct_mapping" }
